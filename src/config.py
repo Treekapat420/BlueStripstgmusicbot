@@ -35,9 +35,10 @@ def get_env_int(name: str, default: Optional[int] = None) -> Optional[int]:
         LOGGER.warning("Invalid value for %s: %s (default: %s)", name, value, default)
         return default
 
-API_ID: Optional[int] = get_env_int("")
-API_HASH: Optional[str] = getenv("")
-TOKEN: Optional[str] = getenv("")
+
+API_ID: Optional[int] = get_env_int("API_ID")
+API_HASH: Optional[str] = getenv("API_HASH")
+TOKEN: Optional[str] = getenv("TOKEN")
 MIN_MEMBER_COUNT: int = get_env_int("MIN_MEMBER_COUNT", 50)
 
 SESSION_STRINGS: list[str] = [getenv(f"STRING{i}", None) for i in range(1, 11)]
