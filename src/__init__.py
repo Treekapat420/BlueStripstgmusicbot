@@ -57,8 +57,10 @@ class Telegram(Client):
         await call.register_decorators()
         await super().start()
         
+        await self.wait_for_authorization()
+
         me = await self.invoke({"@type": "getMe"})
-        if hasattr(me, "@type") and getattr(me, "@type") == "user":
+        if hasattr(me, "id"):
             self.logger.info(f"Assistant User ID: {me.id}")
             self.logger.info(f"Assistant Username: @{getattr(me, 'username', 'N/A')}")
         else:
