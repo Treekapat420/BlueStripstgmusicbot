@@ -10,7 +10,6 @@ from pathlib import Path
 from pytdbot import types
 from pytdbot.client import Client
 from pytdbot import filters
-from pytdbot.tdjson import TdJson
 
 async def start_message(client: Client, message: types.Message):
     await message.reply_text(
@@ -59,11 +58,11 @@ class Telegram(Client):
         await super().start()
         me = await self.invoke({"@type": "getMe"})
 
-if "@type" in me and me["@type"] == "user":
-    self.logger.info(f"Assistant User ID: {me['id']}")
-    self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
-else:
-    self.logger.error(f"Failed to fetch assistant info: {me}")
+        if "@type" in me and me["@type"] == "user":
+            self.logger.info(f"Assistant User ID: {me['id']}")
+            self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
+        else:
+            self.logger.error(f"Failed to fetch assistant info: {me}")
         
         await self.call_manager.start_scheduler()
 
