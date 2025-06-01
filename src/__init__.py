@@ -57,11 +57,13 @@ class Telegram(Client):
         await call.add_bot(self)
         await call.register_decorators()
         await super().start()
-        me = await self.invoke({
-    "@type": "getMe"
-})
-        self.logger.info(f"Assistant User ID: {me['id']}")
-        self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
+        me = await self.invoke({"@type": "getMe"})
+
+if "@type" in me and me["@type"] == "user":
+    self.logger.info(f"Assistant User ID: {me['id']}")
+    self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
+else:
+    self.logger.error(f"Failed to fetch assistant info: {me}")
         
         await self.call_manager.start_scheduler()
 
