@@ -58,9 +58,9 @@ class Telegram(Client):
         await super().start()
         
         me = await self.invoke({"@type": "getMe"})
-        if "@type" in me and me["@type"] == "user":
-            self.logger.info(f"Assistant User ID: {me['id']}")
-            self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
+        if hasattr(me, "@type") and getattr(me, "@type") == "user":
+            self.logger.info(f"Assistant User ID: {me.id}")
+            self.logger.info(f"Assistant Username: @{getattr(me, 'username', 'N/A')}")
         else:
             self.logger.error(f"Failed to fetch assistant info: {me}")
         
