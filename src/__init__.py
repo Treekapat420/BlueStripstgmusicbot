@@ -10,7 +10,7 @@ from pathlib import Path
 from pytdbot import types
 from pytdbot.client import Client
 from pytdbot import filters
-from pytdbot.api import GetMe
+from pytdbot.tdjson import Tdjson
 
 async def start_message(client: Client, message: types.Message):
     await message.reply_text(
@@ -57,9 +57,11 @@ class Telegram(Client):
         await call.add_bot(self)
         await call.register_decorators()
         await super().start()
-        me = await self.invoke(GetMe())
-        self.logger.info(f"Assistant User ID: {me.id}")
-        self.logger.info(f"Assistant Username: @{me.usernames.editable_username if me.usernames else 'N/A'}")
+        me = await self.invoke({
+    "@type": "getMe"
+})
+        self.logger.info(f"Assistant User ID: {me['id']}")
+        self.logger.info(f"Assistant Username: @{me.get('username', 'N/A')}")
         
         await self.call_manager.start_scheduler()
 
