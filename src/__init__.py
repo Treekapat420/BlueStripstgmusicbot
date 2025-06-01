@@ -32,7 +32,7 @@ class Telegram(Client):
             td_verbosity=2,
             td_log=types.LogStreamEmpty(),
             plugins=types.plugins.Plugins(folder="src/modules"),
-            files_directory="",
+            files_directory="/tmp/",
             database_encryption_key="",
             options={"ignore_background_updates": config.IGNORE_BACKGROUND_UPDATES},
         )
