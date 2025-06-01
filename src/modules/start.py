@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 
 from cachetools import TTLCache
-from pytdbot import Client, types, filter
+from pytdbot import Client, types, filters
 
 from src import __version__, StartTime, db
 from src.config import SUPPORT_GROUP
