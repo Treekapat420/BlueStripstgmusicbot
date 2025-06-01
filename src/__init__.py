@@ -56,7 +56,7 @@ class Telegram(Client):
         await call.add_bot(self)
         await call.register_decorators()
         await super().start()
-        me = await self.invoke(types.GetMe())
+        me = await self.get_me()
         self.logger.info(f"Assistant User ID: {me.id}")
         self.logger.info(f"Assistant Username: @{me.usernames.editable_username if me.usernames else 'N/A'}")
         
