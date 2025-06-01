@@ -15,6 +15,8 @@ from src.logger import LOGGER
 
 load_dotenv()
 
+print("Loaded API_ID:", API_ID)
+print("Loaded API_HASH:", API_HASH)
 
 def get_env_int(name: str, default: Optional[int] = None) -> Optional[int]:
     """
