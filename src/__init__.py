@@ -11,7 +11,6 @@ from pytdbot import types
 from pytdbot.client import Client
 from pytdbot import filters
 
-@Client.on_message(filters.command("start") & filters.private)
 async def start_message(client: Client, message: types.Message):
     await message.reply_text(
         "🎶 Welcome to Blue Strips Club Music Bot!\n\nSend me a YouTube/Spotify link or search a song to get started."
