@@ -72,7 +72,16 @@ class Telegram(Client):
             f"Bot started in {(datetime.now() - StartTime).total_seconds()} seconds"
         )
         self.logger.info(f"Version: {__version__}")
-
+    async def wait_for_authorization(self):
+        """Wait until the bot is fully authorized."""
+        while True:
+            state = self.authorization_state
+            if isinstance(state, types.AuthorizationStateReady):
+                break
+            elif isinstance(state, types.AuthorizationStateClosed):
+                raise RuntimeError("Authorization failed or was closed.")
+            await asyncio.sleep(0.5)
+            
     async def stop(self) -> None:
         """Gracefully shutdown the bot and all services."""
         shutdown_tasks = [
