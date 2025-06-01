@@ -56,6 +56,9 @@ class Telegram(Client):
         await call.add_bot(self)
         await call.register_decorators()
         await super().start()
+        assistant = await self.get_me()
+self.logger.info(f"Assistant User ID: {assistant.id}")
+self.logger.info(f"Assistant Username: @{assistant.usernames.editable_username if assistant.usernames else 'N/A'}")
         await self.call_manager.start_scheduler()
 
         self.logger.info(
