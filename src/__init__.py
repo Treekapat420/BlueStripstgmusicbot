@@ -38,6 +38,7 @@ class Telegram(Client):
         )
         self.call_manager = InactiveCallManager(self)
         self.db = db
+        print("Loaded sessions:", config.SESSION_STRINGS)
 
     async def start(self) -> None:
         """Start the bot and all associated services."""
