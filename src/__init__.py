@@ -10,7 +10,7 @@ from pathlib import Path
 from pytdbot import types
 from pytdbot.client import Client
 from pytdbot import filters
-from pytdbot.tdjson import Tdjson
+from pytdbot.tdjson import TdJson
 
 async def start_message(client: Client, message: types.Message):
     await message.reply_text(
