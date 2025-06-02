@@ -220,15 +220,17 @@ class Call:
             GroupCallConfig(auto_start=False) if chat_id < 0 else CallConfig(timeout=50)
         )
         
-        # Workaround for iOS video chat where camera starts off (treated as video session)
+        # iOS fallback: ensure video chat is running BEFORE play
         if os.environ.get("IOS_CLIENT") == "true":
             try:
                 await self.bot.sendTextMessage(chat_id, "📞 Attempting to join call (iOS fallback)...")
-                # Force the assistant to join the voice/video call explicitly
-                await client.join_group_call(chat_id)
-                LOGGER.info("✅ Userbot forced into call (iOS fallback)")
+                join_result = await self._join_assistant(chat_id)
+                if isinstance(join_result, types.Error):
+                    LOGGER.warning("iOS fallback: Assistant join failed: %s", join_result.message)
+                else:
+                    LOGGER.info("iOS fallback: Assistant joined successfully.")
             except Exception as e:
-                LOGGER.warning("⚠️ iOS fallback join_group_call failed: %s", e)
+                LOGGER.warning("⚠️ iOS fallback join failed: %s", e)
         
         try:
             await client.play(chat_id, _stream, call_config)
