@@ -221,16 +221,13 @@ class Call:
         )
         
         # Workaround for iOS video chat where camera starts off (treated as video session)
-        if video or os.environ.get("IOS_CLIENT") == "true":
+        if os.environ.get("IOS_CLIENT") == "true":
             try:
                 await self.bot.sendTextMessage(chat_id, "📞 Attempting to join call (iOS fallback)...")
-                await self.bot.joinGroupCall(
-                    chat_id=chat_id,
-                    options=types.CallOptions(allow_presentation=True)
-                )
-                LOGGER.info("✅ Fallback joinGroupCall for video/iOS succeeded.")
-            except Exception as ve:
-                LOGGER.warning("⚠️ Fallback joinGroupCall failed: %s", ve)
+                await self._join_assistant(chat_id)
+                LOGGER.info("iOS fallback join executed.")
+            except Exception as e:
+                LOGGER.warning("Fallback join failed: %s", e)
         
         try:
             await client.play(chat_id, _stream, call_config)
