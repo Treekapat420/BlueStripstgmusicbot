@@ -12,4 +12,4 @@ COPY . /app/
 
 RUN uv pip install -e . --system
 
-CMD ["python", "src/test_env.py"]
+CMD ["tgmusic"]
