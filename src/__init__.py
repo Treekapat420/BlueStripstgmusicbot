@@ -24,6 +24,7 @@ from src.modules.jobs import InactiveCallManager
 __version__ = "1.2.1"
 StartTime = datetime.now()
 
+print("DEBUG API_ID TYPE:", type(config.API_ID), config.API_ID)
 
 class Telegram(Client):
     """Main Telegram bot client with extended functionality."""
