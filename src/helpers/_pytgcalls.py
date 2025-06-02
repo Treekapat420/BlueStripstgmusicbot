@@ -224,10 +224,11 @@ class Call:
         if os.environ.get("IOS_CLIENT") == "true":
             try:
                 await self.bot.sendTextMessage(chat_id, "📞 Attempting to join call (iOS fallback)...")
-                await self._join_assistant(chat_id)
-                LOGGER.info("iOS fallback join executed.")
+                # Force the assistant to join the voice/video call explicitly
+                await client.join_group_call(chat_id)
+                LOGGER.info("✅ Userbot forced into call (iOS fallback)")
             except Exception as e:
-                LOGGER.warning("Fallback join failed: %s", e)
+                LOGGER.warning("⚠️ iOS fallback join_group_call failed: %s", e)
         
         try:
             await client.play(chat_id, _stream, call_config)
