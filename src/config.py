@@ -47,8 +47,10 @@ API_HASH: Optional[str] = getenv("API_HASH")
 TOKEN: Optional[str] = getenv("TOKEN")
 MIN_MEMBER_COUNT: int = get_env_int("MIN_MEMBER_COUNT", 50)
 
-print("Loaded API_ID:", API_ID)
-print("Loaded API_HASH:", API_HASH)
+print("DEBUG: Raw API_ID from getenv:", getenv("API_ID"))
+print("DEBUG: Parsed API_ID:", API_ID)
+print("DEBUG: Parsed API_HASH:", API_HASH)
+print("DEBUG: Parsed TOKEN:", TOKEN)
 
 SESSION_STRINGS: list[str] = [getenv(f"STRING{i}", None) for i in range(1, 11)]
 SESSION_STRINGS = [s for s in SESSION_STRINGS if s]
