@@ -225,13 +225,63 @@ class Call:
         if isinstance(join, types.Error):
             return join
 
+        # Optional delay to allow join propagation
+        await asyncio.sleep(1)
+
+        # Build the media stream
+        _stream = MediaStream(
+            audio_path=file_path,
+            media_path=file_path,
+            audio_parameters=AudioQuality.HIGH if video else AudioQuality.STUDIO,
+            video_parameters=VideoQuality.FHD_1080p if video else VideoQuality.SD_360p,
+            audio_flags=MediaStream.Flags.REQUIRED,
+            video_flags=(
+                MediaStream.Flags.AUTO_DETECT if video else MediaStream.Flags.IGNORE
+            ),
+            ffmpeg_parameters=ffmpeg_parameters,
+        )
+
+        call_config = (
+            GroupCallConfig(auto_start=False) if chat_id < 0 else CallConfig(timeout=50)
+        )
+
+        # iOS fallback info log
         if os.environ.get("IOS_CLIENT") == "true":
             try:
                 await self.bot.sendTextMessage(chat_id, "📞 Attempting to join call (iOS fallback)...")
                 LOGGER.info("iOS fallback: Assistant joined successfully")
-                await asyncio.sleep(1)  # Give Telegram time to sync group call state
             except Exception as e:
-                LOGGER.warning("⚠️ iOS fallback join failed: %s", e)
+                LOGGER.warning("⚠️ iOS fallback log failed: %s", e)
+
+        # Call play now
+        try:
+            await client.play(chat_id, _stream, call_config)
+            if await db.get_logger_status(self.bot.me.id):
+                self.bot.loop.create_task(
+                    send_logger(self.bot, chat_id, chat_cache.get_current_song(chat_id))
+                )
+            return types.Ok()
+        except (exceptions.NoActiveGroupCall, ConnectionNotFound):
+            return types.Error(
+                code=404,
+                message="No active voice chat found.\n\n"
+                "Please start a voice chat and try again.",
+            )
+        except TelegramServerError:
+            LOGGER.warning("Telegram server error during playback")
+            return types.Error(
+                code=502,
+                message="Telegram server issues detected. Please try again later.",
+            )
+        except exceptions.NoAudioSourceFound as e:
+            LOGGER.error("Audio source not found in chat %s: %s", chat_id, str(e))
+            return types.Error(code=404, message="Audio source not found.")
+        except errors.RPCError as e:
+            LOGGER.error("Playback failed in chat %s: %s", chat_id, str(e))
+            return types.Error(code=e.CODE or 500, message=f"Playback error: {str(e)}")
+        except Exception as e:
+            LOGGER.error("Playback failed in chat %s: %s", chat_id, str(e), exc_info=True)
+            return types.Error(code=500, message=f"Playback error: {str(e)}")
         
         try:
             await client.play(chat_id, _stream, call_config)
