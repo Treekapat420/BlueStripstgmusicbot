@@ -221,14 +221,15 @@ class Call:
         )
         
         # iOS fallback: ensure video chat is running BEFORE play
+        join = await self._join_assistant(chat_id)
+        if isinstance(join, types.Error):
+            return join
+
         if os.environ.get("IOS_CLIENT") == "true":
             try:
                 await self.bot.sendTextMessage(chat_id, "📞 Attempting to join call (iOS fallback)...")
-                join_result = await self._join_assistant(chat_id)
-                if isinstance(join_result, types.Error):
-                    LOGGER.warning("iOS fallback: Assistant join failed: %s", join_result.message)
-                else:
-                    LOGGER.info("iOS fallback: Assistant joined successfully.")
+                LOGGER.info("iOS fallback: Assistant joined successfully")
+                await asyncio.sleep(1)  # Give Telegram time to sync group call state
             except Exception as e:
                 LOGGER.warning("⚠️ iOS fallback join failed: %s", e)
         
