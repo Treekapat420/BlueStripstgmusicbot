@@ -15,11 +15,9 @@ from src.logger import LOGGER
 
 load_dotenv()
 
-from os import getenv
-
-print("DEBUG: API_ID raw:", getenv("API_ID"))
-print("DEBUG: API_HASH raw:", getenv("API_HASH"))
-print("DEBUG: TOKEN raw:", getenv("TOKEN"))
+print("DEBUG ENV - API_ID:", getenv("API_ID"))
+print("DEBUG ENV - API_HASH:", getenv("API_HASH"))
+print("DEBUG ENV - TOKEN:", getenv("TOKEN"))
 
 def get_env_int(name: str, default: Optional[int] = None) -> Optional[int]:
     """
@@ -46,11 +44,6 @@ API_ID: Optional[int] = get_env_int("API_ID")
 API_HASH: Optional[str] = getenv("API_HASH")
 TOKEN: Optional[str] = getenv("TOKEN")
 MIN_MEMBER_COUNT: int = get_env_int("MIN_MEMBER_COUNT", 50)
-
-print("DEBUG: Raw API_ID from getenv:", getenv("API_ID"))
-print("DEBUG: Parsed API_ID:", API_ID)
-print("DEBUG: Parsed API_HASH:", API_HASH)
-print("DEBUG: Parsed TOKEN:", TOKEN)
 
 SESSION_STRINGS: list[str] = [getenv(f"STRING{i}", None) for i in range(1, 11)]
 SESSION_STRINGS = [s for s in SESSION_STRINGS if s]
