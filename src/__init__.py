@@ -24,14 +24,15 @@ from src.modules.jobs import InactiveCallManager
 __version__ = "1.2.1"
 StartTime = datetime.now()
 
-print("DEBUG API_ID TYPE:", type(config.API_ID), config.API_ID)
-
 class Telegram(Client):
     """Main Telegram bot client with extended functionality."""
 
     def __init__(self) -> None:
         """Initialize the Telegram bot client with configuration validation."""
         self._validate_config()
+        print("DEBUG - API_ID:", config.API_ID)
+        print("DEBUG - API_HASH:", config.API_HASH)
+        print("DEBUG - TOKEN:", config.TOKEN)
         super().__init__(
             token=config.TOKEN,
             api_id=config.API_ID,
@@ -40,7 +41,7 @@ class Telegram(Client):
             td_verbosity=2,
             td_log=types.LogStreamEmpty(),
             plugins=types.plugins.Plugins(folder="src/modules"),
-            files_directory="/tmp/db",
+            files_directory="/tmp/db-new",
             database_encryption_key="",
             options={"ignore_background_updates": config.IGNORE_BACKGROUND_UPDATES},
         )
