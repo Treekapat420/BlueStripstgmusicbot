@@ -15,6 +15,12 @@ from src.logger import LOGGER
 
 load_dotenv()
 
+from os import getenv
+
+print("DEBUG: API_ID raw:", getenv("API_ID"))
+print("DEBUG: API_HASH raw:", getenv("API_HASH"))
+print("DEBUG: TOKEN raw:", getenv("TOKEN"))
+
 def get_env_int(name: str, default: Optional[int] = None) -> Optional[int]:
     """
     Gets an environment variable as an integer, or returns the default value if
